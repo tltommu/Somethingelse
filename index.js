@@ -22,10 +22,10 @@ class Character {
   }
   
   class Player extends Character {
-    constructor(name, health, attackDamage) {
+    constructor(name, health, attackDamage, level, exp) {
       super(name, health, attackDamage);
-      this.level = 1;
-      this.exp = 0;
+      this.level = level || 1;
+      this.exp = exp || 0;
       this.expToLevelUp = 15;
     }
   
@@ -72,7 +72,7 @@ class Character {
       
   }
   
-  const player = new Player("Player", 100, 20);
+  const player = Player.loadPlayerData();
   const bot = new Character("Bot", 100, 15);
   
   let round = 1;

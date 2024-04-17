@@ -1,3 +1,5 @@
+const fs =require('fs')
+
 class Character {
     constructor(name, health, attackDamage) {
       this.name = name;
@@ -52,20 +54,22 @@ class Character {
       }
     
       savePlayerData() {
-        localStorage.setItem('playerData', JSON.stringify({
-          level: this.level,
-          exp: this.exp
-        }));
+        const data ={
+            level:this.level,
+            exp:this.exp
+        };
+        fs.writeFileSync('playerData.json', JSON.stringify(data));
       }
-    
       static loadPlayerData() {
-        const data = JSON.parse(localStorage.getItem('playerData'));
-        if (data) {
+        try {
+          const data = JSON.parse(fs.readFileSync('playerData.json'));
           return new Player("Player", 100, 20, data.level, data.exp);
-        } else {
+        } catch (error) {
+          console.log("Error loading player data:", error.message);
           return new Player("Player", 100, 20);
         }
     }
+      
   }
   
   const player = new Player("Player", 100, 20);

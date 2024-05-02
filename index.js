@@ -1,4 +1,4 @@
-const fs = require('fs');
+
 
 class Character {
   constructor(name, health, attackDamage) {
@@ -62,12 +62,12 @@ class Player extends Character {
       level: this.level,
       exp: this.exp
     };
-    fs.writeFileSync('playerData.json', JSON.stringify(data));
+    localStorage.setItem('playerData', JSON.stringify(data));
   }
 
   static loadPlayerData() {
     try {
-      const data = JSON.parse(fs.readFileSync('playerData.json'));
+      const data = JSON.parse(localStorage.getItem('playerData'));
       return new Player("Player", 100, 20, data.level, data.exp);
     } catch (error) {
       console.log("Error loading player data:", error.message);
@@ -91,29 +91,40 @@ while (player.health > 0 && bot.health > 0) {
   console.log("-----------------------------");
   round++;
 }
-function displayPlayerInfo() {
-  document.getElementById("playerHealth").innerText = "Health: " + player.health;
-  document.getElementById("playerLevel").innerText = "Level: " + player.level;
-  document.getElementById("playerExp").innerText = "Experience: " + player.exp;
-}
+document.addEventListener("DOMContentLoaded", function() {
+  const player = Player.loadPlayerData();
+  const bot = new Character("Bot", 100, 15);
 
-function displayBotInfo() {
-  document.getElementById("botHealth").innerText = "Health: " + bot.health;
-}
-
-function startBattle() {
-  let round = 1;
-  while (player.health > 0 && bot.health > 0) {
-      console.log(`Round ${round}`);
-      console.log("-----------------------------");
-      if (Math.random() < 0.5) {
-          player.attack(bot);
-      } else {
-          bot.attack(player);
-      }
-      displayPlayerInfo();
-      displayBotInfo();
-      console.log("-----------------------------");
-      round++;
+  function displayPlayerInfo() {
+      document.getElementById("playerHealth").innerText = "Health: " + player.health;
+      document.getElementById("playerLevel").innerText = "Level: " + player.level;
+      document.getElementById("playerExp").innerText = "Experience: " + player.exp;
   }
-}
+
+  function displayBotInfo() {
+      document.getElementById("botHealth").innerText = "Health: " + bot.health;
+  }
+
+  window.startBattle = function() {
+      let round = 1;
+      while (player.health > 0 && bot.health > 0) {
+          console.log(`Round ${round}`);
+          console.log("-----------------------------");
+          if (Math.random() < 0.5) {
+              player.attack(bot);
+          } else {
+              bot.attack(player);
+          }
+          displayPlayerInfo();
+          displayBotInfo();
+          console.log("-----------------------------");
+          round++;
+      }
+  };
+
+  document.getElementById("startButton").addEventListener("click", startBattle);
+
+  // Initial display of player and bot info
+  displayPlayerInfo();
+  displayBotInfo();
+});

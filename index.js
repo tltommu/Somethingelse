@@ -91,3 +91,29 @@ while (player.health > 0 && bot.health > 0) {
   console.log("-----------------------------");
   round++;
 }
+function displayPlayerInfo() {
+  document.getElementById("playerHealth").innerText = "Health: " + player.health;
+  document.getElementById("playerLevel").innerText = "Level: " + player.level;
+  document.getElementById("playerExp").innerText = "Experience: " + player.exp;
+}
+
+function displayBotInfo() {
+  document.getElementById("botHealth").innerText = "Health: " + bot.health;
+}
+
+function startBattle() {
+  let round = 1;
+  while (player.health > 0 && bot.health > 0) {
+      console.log(`Round ${round}`);
+      console.log("-----------------------------");
+      if (Math.random() < 0.5) {
+          player.attack(bot);
+      } else {
+          bot.attack(player);
+      }
+      displayPlayerInfo();
+      displayBotInfo();
+      console.log("-----------------------------");
+      round++;
+  }
+}
